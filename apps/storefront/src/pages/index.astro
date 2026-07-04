@@ -1,0 +1,101 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import { sdk } from '@/lib/medusa'
+
+// Fetch products from Medusa Store API.
+// This runs server-side on every request (output: 'server').
+let products: Awaited<ReturnType<typeof sdk.store.product.list>>['products'] = []
+let error: string | null = null
+
+try {
+  const result = await sdk.store.product.list({ limit: 12 })
+  products = result.products
+} catch (e) {
+  error = 'Unable to connect to the store backend. Make sure Medusa is running.'
+}
+---
+
+<Layout title="Shop">
+  <section class="hero">
+    <h1>Welcome to Randall Design</h1>
+    <p>A curated collection – coming soon.</p>
+  </section>
+
+  {error && (
+    <div class="error-banner">
+      <strong>Backend not reachable:</strong> {error}
+    </div>
+  )}
+
+  {products.length > 0 ? (
+    <section class="product-grid">
+      {products.map((product) => (
+        <article class="product-card" key={product.id}>
+          <h2>{product.title}</h2>
+          {product.description && <p>{product.description}</p>}
+        </article>
+      ))}
+    </section>
+  ) : !error && (
+    <p class="empty-state">No products yet – check back soon.</p>
+  )}
+</Layout>
+
+<style>
+  .hero {
+    padding: 4rem 0 3rem;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+  }
+
+  .hero p {
+    margin-top: 1rem;
+    color: #555;
+    font-size: 1.125rem;
+  }
+
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .product-card {
+    border: 1px solid #e5e5e5;
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+  }
+
+  .product-card h2 {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .product-card p {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: #555;
+  }
+
+  .error-banner {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+  }
+
+  .empty-state {
+    text-align: center;
+    color: #777;
+    margin-top: 4rem;
+  }
+</style>

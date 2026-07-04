@@ -1,0 +1,23 @@
+{
+  "name": "@randall-design/medusa",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "medusa build",
+    "start": "medusa start",
+    "develop": "medusa develop",
+    "migrate": "medusa db:migrate",
+    "seed": "medusa exec ./src/scripts/seed.ts"
+  },
+  "dependencies": {
+    "@medusajs/medusa": "^2.0.0",
+    "@medusajs/event-bus-redis": "^2.0.0",
+    "@medusajs/cache-redis": "^2.0.0",
+    "@medusajs/workflow-engine-redis": "^2.0.0",
+    "pg": "^8.13.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0"
+  }
+}

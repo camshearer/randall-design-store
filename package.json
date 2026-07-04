@@ -1,0 +1,18 @@
+{
+  "name": "randall-design-store",
+  "private": true,
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
+  },
+  "scripts": {
+    "dev:storefront": "pnpm --filter @randall-design/storefront dev",
+    "dev:medusa": "pnpm --filter @randall-design/medusa develop",
+    "build": "pnpm -r build",
+    "medusa:build": "pnpm --filter @randall-design/medusa build",
+    "medusa:start": "pnpm --filter @randall-design/medusa start",
+    "medusa:migrate": "pnpm --filter @randall-design/medusa migrate",
+    "medusa:seed": "pnpm --filter @randall-design/medusa seed"
+  }
+}

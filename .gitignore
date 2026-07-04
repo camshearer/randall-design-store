@@ -1,0 +1,45 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Environment – never commit real secrets
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+dist/
+build/
+.medusa/
+.next/
+.nuxt/
+.output/
+
+# Astro
+apps/storefront/.astro/
+apps/storefront/dist/
+apps/storefront/.netlify/
+
+# Medusa
+services/medusa/.medusa/
+services/medusa/dist/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
