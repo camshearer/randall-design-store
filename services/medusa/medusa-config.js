@@ -33,16 +33,11 @@ module.exports = {
       resolve: '@medusajs/cache-redis',
       options: { redisUrl: process.env.REDIS_URL },
     },
-    // Correct Medusa v2 slot key for the workflow engine orchestrator.
-    // "workflowEngine" triggered "Could not resolve 'sharedContainer'" because
-    // that key doesn't match the core slot; "workflowEngineModule" is the
-    // registered name in @medusajs/framework's Modules enum.
-    // The loader destructures options.redis.url internally even in v2.17.2;
-    // using { redisUrl } causes "Cannot destructure property 'url'".
-    workflowEngineModule: {
-      resolve: '@medusajs/workflow-engine-redis',
-      options: { redis: { url: process.env.REDIS_URL } },
-    },
+    // @medusajs/workflow-engine-redis omitted.
+    // Both "workflowEngine" and "workflowEngineModule" keys crash with
+    // "Could not resolve 'sharedContainer'" in v2.17.2 — the workflow engine
+    // is bootstrapped before the main container is fully initialised so
+    // sharedContainer is never injected. Using the built-in in-memory engine.
 
     // ── PAYMENT PROVIDER ──────────────────────────────────────────────────
     // Option A – Stripe (official plugin):
