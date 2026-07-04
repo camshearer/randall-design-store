@@ -37,9 +37,11 @@ module.exports = {
     // "workflowEngine" triggered "Could not resolve 'sharedContainer'" because
     // that key doesn't match the core slot; "workflowEngineModule" is the
     // registered name in @medusajs/framework's Modules enum.
+    // The loader destructures options.redis.url internally even in v2.17.2;
+    // using { redisUrl } causes "Cannot destructure property 'url'".
     workflowEngineModule: {
       resolve: '@medusajs/workflow-engine-redis',
-      options: { redisUrl: process.env.REDIS_URL },
+      options: { redis: { url: process.env.REDIS_URL } },
     },
 
     // ── PAYMENT PROVIDER ──────────────────────────────────────────────────
