@@ -26,22 +26,14 @@ module.exports = {
     disable: true,
   },
 
-  // Object format required — Medusa v2 calls Object.keys(modules) to validate
-  // names. An array would produce index keys "0","1",... which fail validation.
+  // Custom Redis modules removed: the duplicate registration alongside
+  // Medusa's built-in event_bus / cache modules causes a race in MikroORM
+  // pool initialisation that triggers "Cannot read properties of undefined
+  // (reading 'acquire')" during data-migration scripts and prevents the
+  // api_key module's service from registering in the Awilix container.
+  // Using all built-in defaults (in-memory event bus, cache, workflow engine)
+  // until the correct v2.17.x Redis module keys are confirmed.
   modules: {
-    eventBus: {
-      resolve: '@medusajs/event-bus-redis',
-      options: { redisUrl: process.env.REDIS_URL },
-    },
-    cacheService: {
-      resolve: '@medusajs/cache-redis',
-      options: { redisUrl: process.env.REDIS_URL },
-    },
-    // @medusajs/workflow-engine-redis omitted.
-    // Both "workflowEngine" and "workflowEngineModule" keys crash with
-    // "Could not resolve 'sharedContainer'" in v2.17.2 — the workflow engine
-    // is bootstrapped before the main container is fully initialised so
-    // sharedContainer is never injected. Using the built-in in-memory engine.
 
     // ── PAYMENT PROVIDER ──────────────────────────────────────────────────
     // Option A – Stripe (official plugin):
