@@ -1,5 +1,4 @@
-# Used only when Railway service root directory is set to services/medusa.
-# For root-level deployment, see /railway.toml instead.
+# Railway service root directory must be set to services/medusa in the dashboard.
 
 [build]
 buildCommand = "pnpm install && pnpm build"
