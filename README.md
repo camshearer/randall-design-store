@@ -1,173 +1,108 @@
-# Randall Design Store
+<p align="center">
+  <a href="https://www.medusajs.com">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://user-images.githubusercontent.com/59018053/229103275-b5e482bb-4601-46e6-8142-244f531cebdb.svg">
+      <source media="(prefers-color-scheme: light)" srcset="https://user-images.githubusercontent.com/59018053/229103726-e5b529a3-9b3f-4970-8a1f-c6af37f087bf.svg">
+      <img alt="Medusa logo" src="https://user-images.githubusercontent.com/59018053/229103726-e5b529a3-9b3f-4970-8a1f-c6af37f087bf.svg" width=100>
+    </picture>
+  </a>
+  <a href="https://railway.com/deploy/medusajs-2136-storefront-new">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://railway.app/brand/logo-light.svg">
+      <source media="(prefers-color-scheme: light)" srcset="https://railway.app/brand/logo-dark.svg">
+      <img alt="Railway logo" src="https://railway.app/brand/logo-light.svg" width=100>
+    </picture>
+  </a>
+</p>
 
-pnpm monorepo powering the Randall Design eCommerce platform.
+<h2 align="center">
+  Prebaked medusajs 2.0 monorepo
+</h2>
+<h4 align="center">
+  Backend + Storefront + postgres + redis + MinIO + MeiliSearch
+</h4>
+<p align="center">
+Combine Medusa's modules for your commerce backend with the newest Next.js 14 features for a performant storefront.</p>
 
-| Package | Stack | Hosting |
-|---|---|---|
-| `apps/storefront` | Astro 5, SSR | Netlify |
-| `services/medusa` | Medusa v2 | Railway |
+<h2 align="center">
+  Need help?<br>
+  <a href="https://funkyton.com/medusajs-2-0-is-finally-here/">Step by step deploy guide, and video instructions</a>
+</h2>
 
----
+<h3 align="center">
+  NEW! Looking for medusa B2B? <br>
+  <a href="https://github.com/rpuls/medusa-b2b-for-railway/">Checkout the new B2B quickstart for Railway repository</a>
+</h3>
 
-## Project Structure
 
-```
-randall-design-store/
-├── apps/
-│   └── storefront/          # Astro storefront (Netlify)
-│       ├── src/lib/medusa.ts # Pre-configured Medusa JS SDK
-│       └── src/pages/
-└── services/
-    └── medusa/              # Medusa v2 backend (Railway)
-        ├── medusa-config.ts  # All provider/CORS config lives here
-        └── src/modules/
-            └── payment/     # Isolated payment module boundary
-```
 
----
+## About this boilerplate
+This boilerplate is a monorepo consisting of the officially released MedusaJS 2.0 backend and storefront application. It is a pre-configured, ready-to-deploy solution, modified for seamless deployment on [railway.app](https://railway.app?referralCode=-Yg50p).
 
-## Prerequisites
+Updated: to `version 2.13.6` 🥳
 
-- Node.js ≥ 20
-- pnpm ≥ 9 (`npm install -g pnpm`)
-- Docker (recommended for local Postgres + Redis)
-- Railway CLI (optional): `npm install -g @railway/cli`
+## Deploy with no manual setup in minutes
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/medusajs-2136-storefront-new)
 
----
 
-## Local Development
+## Preconfigured 3rd party integrations
 
-```bash
-# 1. Install all workspace dependencies from the repo root
-pnpm install
+- MinIO file storage: Replaces local file storage with MinIO cloud storage, automatically creating a 'medusa-media' bucket for your media files. [README](backend/src/modules/minio-file/README.md)
+- Resend email integration [Watch setup video](https://youtu.be/pbdZm26YDpE?si=LQTHWeZMLD4w3Ahw) - special thanks to [aleciavogel](https://github.com/aleciavogel) for Resend notification service, and react-email implementation! [README](backend/src/modules/email-notifications/README.md)
+- Stripe payment service: [Watch setup video](https://youtu.be/dcSOpIzc1Og)
+- Meilisearch integration by [Rokmohar](https://github.com/rokmohar/medusa-plugin-meilisearch): Adds powerful product search capabilities to your store. When deployed on Railway using the template, MeiliSearch is automatically configured. (For non-railway'ers: [Watch setup video](https://youtu.be/hrXcc5MjApI))
 
-# 2. Copy and fill in env files
-cp services/medusa/.env.example services/medusa/.env
-cp apps/storefront/.env.example  apps/storefront/.env
+# local setup
 
-# 3. Start Postgres + Redis (Docker example)
-docker run -d --name pg    -p 5432:5432 -e POSTGRES_PASSWORD=password postgres:16-alpine
-docker run -d --name redis -p 6379:6379 redis:7-alpine
+## Backend
+Video instructions: https://youtu.be/PPxenu7IjGM
 
-# 4. Run Medusa migrations
-pnpm medusa:migrate
+- `cd backend/`
+- `pnpm install` or `npm i`
+- Rename `.env.template` ->  `.env`
+- To connect to your online database from your local machine, copy the `DATABASE_URL` value auto-generated on Railway and add it to your `.env` file.
+  - If connecting to a new database, for example a local one, run `pnpm ib` or `npm run ib` to seed the database.
+- `pnpm dev` or `npm run dev`
 
-# 5. Start Medusa dev server  (http://localhost:9000)
-pnpm dev:medusa
+### requirements
+- **postgres database** (Automatic setup when using the Railway template)
+- **redis** (Automatic setup when using the Railway template) - fallback to simulated redis.
+- **MinIO storage** (Automatic setup when using the Railway template) - fallback to local storage.
+- **Meilisearch** (Automatic setup when using the Railway template)
 
-# 6. In a separate terminal – start Astro storefront (http://localhost:4321)
-pnpm dev:storefront
-```
+### commands
 
----
+`cd backend/`
+`npm run ib` or `pnpm ib` will initialize the backend by running migrations and seed the database with required system data.
+`npm run dev` or `pnpm dev` will start the backend (and admin dashboard frontend on `localhost:9000/app`) in development mode.
+`pnpm build && pnpm start` will compile the project and run from compiled source. This can be useful for reproducing issues on your cloud instance.
 
-## Railway Deployment (Medusa backend)
+## Storefront
+Video instructions: https://youtu.be/PPxenu7IjGM
 
-### 1 – Create a Railway project
+- `cd storefront/
+- Install dependencies `npm i` or `pnpm i`
+- Rename `.env.local.template` ->  `.env.local`
 
-Log in at railway.app → **New Project** → **Empty Project**.
+### requirements
+- A running backend on port 9000 is required to fetch product data and other information needed to build Next.js pages.
 
-### 2 – Add PostgreSQL
+### commands
+`cd storefront/`
+`npm run dev` or `pnpm dev` will run the storefront on uncompiled code, with hot-reloading as files are saved with changes.
 
-Inside the project → **New** → **Database** → **PostgreSQL**.  
-Railway automatically sets `DATABASE_URL` in your service environment.
-
-### 3 – Add Redis
-
-**New** → **Database** → **Redis**.  
-Railway automatically sets `REDIS_URL`.
-
-### 4 – Add the GitHub repo
-
-**New** → **GitHub Repo** → select `camshearer/randall-design-store`.
-
-### 5 – Configure the service
-
-In the service settings (not the database plugins):
-
-| Setting | Value |
-|---|---|
-| **Root Directory** | *(leave blank – use repo root)* |
-| **Build Command** | `npm install -g pnpm && pnpm install --frozen-lockfile && pnpm --filter @randall-design/medusa build` |
-| **Start Command** | `pnpm --filter @randall-design/medusa migrate && pnpm --filter @randall-design/medusa start` |
-
-> The `railway.toml` at `services/medusa/railway.toml` sets these automatically
-> if Railway picks it up, but the dashboard values take precedence.
-
-### 6 – Set environment variables
-
-Add these in **Variables** (Railway will already have injected DATABASE_URL and REDIS_URL):
-
-| Variable | Value |
-|---|---|
-| `NODE_ENV` | `production` |
-| `JWT_SECRET` | `openssl rand -base64 48` |
-| `COOKIE_SECRET` | `openssl rand -base64 48` |
-| `MEDUSA_BACKEND_URL` | Your Railway service URL (set after first deploy) |
-| `STORE_CORS` | Your Netlify URL, e.g. `https://randall-design.netlify.app` |
-| `ADMIN_CORS` | Your Railway URL, e.g. `https://randall-design-medusa.up.railway.app` |
-| `AUTH_CORS` | Both of the above, comma-separated |
-| `MEDUSA_WORKER_MODE` | `shared` |
-
-### 7 – First deploy
-
-Click **Deploy**. Watch the build logs.  
-After the server is healthy, copy the Railway URL and update `MEDUSA_BACKEND_URL` in Variables, then redeploy.
-
-### 8 – Create a publishable API key
-
-Open `<MEDUSA_BACKEND_URL>/app` → **Settings** → **API Keys** → **Create publishable key**.  
-You will need this key for the storefront (`PUBLIC_MEDUSA_PUBLISHABLE_KEY`).
-
----
-
-## Netlify Deployment (Astro storefront)
-
-1. Log in at app.netlify.com → **Add new site** → **Import an existing project** → GitHub.
-2. Select `camshearer/randall-design-store`.
-3. Netlify will read `apps/storefront/netlify.toml` for build config automatically.
-4. Add environment variables under **Site configuration → Environment variables**:
-
-| Variable | Value |
-|---|---|
-| `PUBLIC_MEDUSA_BACKEND_URL` | Your Railway service URL |
-| `PUBLIC_MEDUSA_PUBLISHABLE_KEY` | Key created in step 8 above |
-
-5. **Deploy site**.
-
----
-
-## Adding a Payment Provider
-
-Payment logic is isolated in `services/medusa/src/modules/payment/`.  
-The integration point in `medusa-config.ts` has commented-out blocks for both Stripe and CyberSource.
-
-### Stripe (quickest path)
-
-```bash
-pnpm --filter @randall-design/medusa add @medusajs/payment-stripe
-```
-
-Uncomment the Stripe block in `services/medusa/medusa-config.ts` and set:
-- `STRIPE_SECRET_KEY=sk_live_...`
-
-### CyberSource (custom provider)
-
-1. Implement `AbstractPaymentProvider` inside `services/medusa/src/modules/payment/index.ts`.  
-   Docs: https://docs.medusajs.com/resources/commerce-modules/payment/provider
-2. Uncomment the CyberSource block in `medusa-config.ts`.
-3. Set `CYBERSOURCE_MERCHANT_ID`, `CYBERSOURCE_API_KEY_ID`, `CYBERSOURCE_SECRET_KEY`.
-
----
-
-## Scripts Reference
-
-| Command | What it does |
-|---|---|
-| `pnpm dev:medusa` | Medusa dev server with hot reload |
-| `pnpm dev:storefront` | Astro dev server |
-| `pnpm medusa:build` | Production build of Medusa |
-| `pnpm medusa:start` | Start production Medusa server |
-| `pnpm medusa:migrate` | Run pending DB migrations |
-| `pnpm medusa:seed` | Run database seed script |
-| `pnpm build` | Build all workspace packages |
+## Useful resources
+- How to setup credit card payment with Stripe payment module: https://youtu.be/dcSOpIzc1Og
+- https://funkyton.com/medusajs-2-0-is-finally-here/#succuessfully-deployed-whats-next
+  
+<p align="center">
+  <a href="https://funkyton.com/">
+    <div style="text-align: center;">
+      A template by,
+      <br>
+      <picture>
+        <img alt="FUNKYTON logo" src="https://res-5.cloudinary.com/hczpmiapo/image/upload/q_auto/v1/ghost-blog-images/funkyton-logo.png" width=200>
+      </picture>
+    </div>
+  </a>
+</p>
