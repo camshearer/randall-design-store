@@ -22,35 +22,36 @@ module.exports = {
     backendUrl: process.env.MEDUSA_BACKEND_URL,
   },
 
-  modules: [
-    {
+  // Object format required — Medusa v2 calls Object.keys(modules) to validate
+  // names. An array would produce index keys "0","1",... which fail validation.
+  modules: {
+    eventBus: {
       resolve: '@medusajs/event-bus-redis',
       options: { redisUrl: process.env.REDIS_URL },
     },
-    {
+    cacheService: {
       resolve: '@medusajs/cache-redis',
       options: { redisUrl: process.env.REDIS_URL },
     },
-    {
+    workflowEngine: {
       resolve: '@medusajs/workflow-engine-redis',
       options: { redis: { url: process.env.REDIS_URL } },
     },
 
-    // ── PAYMENT PROVIDER ────────────────────────────────────────────────────
+    // ── PAYMENT PROVIDER ──────────────────────────────────────────────────
     // Option A – Stripe (official plugin):
-    //   pnpm add @medusajs/payment-stripe
-    //   Uncomment and set STRIPE_SECRET_KEY:
+    //   pnpm add @medusajs/payment-stripe  then set STRIPE_SECRET_KEY
     //
-    // {
+    // payment: {
     //   resolve: '@medusajs/payment-stripe',
     //   options: { apiKey: process.env.STRIPE_SECRET_KEY },
     // },
     //
     // Option B – CyberSource (custom provider):
     //   Implement AbstractPaymentProvider in src/modules/payment/index.ts
-    //   Uncomment and set CYBERSOURCE_* env vars:
+    //   then set CYBERSOURCE_* env vars
     //
-    // {
+    // payment: {
     //   resolve: './src/modules/payment',
     //   options: {
     //     merchantId: process.env.CYBERSOURCE_MERCHANT_ID,
@@ -58,6 +59,6 @@ module.exports = {
     //     secretKey:  process.env.CYBERSOURCE_SECRET_KEY,
     //   },
     // },
-    // ────────────────���───────────────────────────────────────────────────────
-  ],
+    // ─────────────────────────────────────────────────────────────────────
+  },
 }
