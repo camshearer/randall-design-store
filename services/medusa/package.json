@@ -14,6 +14,7 @@
     "seed": "medusa exec ./src/scripts/seed.ts"
   },
   "dependencies": {
+    "@medusajs/cli": "^2.0.0",
     "@medusajs/medusa": "^2.0.0",
     "@medusajs/event-bus-redis": "^2.0.0",
     "@medusajs/cache-redis": "^2.0.0",
