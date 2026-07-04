@@ -1,0 +1,13 @@
+# Root-level Railpack config.
+# Railway service is deployed from the repo root; Railpack handles
+# pnpm install automatically for the workspace.
+
+[build]
+buildCommand = "pnpm --filter @randall-design/medusa build"
+
+[deploy]
+startCommand = "pnpm --filter @randall-design/medusa migrate && pnpm --filter @randall-design/medusa start"
+healthcheckPath = "/health"
+healthcheckTimeout = 300
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3

@@ -1,12 +1,12 @@
+# Used only when Railway service root directory is set to services/medusa.
+# For root-level deployment, see /railway.toml instead.
+
 [build]
-# Installs workspace deps from monorepo root, then builds Medusa.
-# Railway root directory must be set to the repo root (see README).
-buildCommand = "npm install -g pnpm && pnpm install --frozen-lockfile && pnpm --filter @randall-design/medusa build"
+buildCommand = "pnpm install && pnpm build"
 
 [deploy]
-# Runs DB migrations then starts the server.
-startCommand = "pnpm --filter @randall-design/medusa migrate && pnpm --filter @randall-design/medusa start"
-restartPolicyType = "ON_FAILURE"
-restartPolicyMaxRetries = 3
+startCommand = "pnpm migrate && pnpm start"
 healthcheckPath = "/health"
 healthcheckTimeout = 300
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
