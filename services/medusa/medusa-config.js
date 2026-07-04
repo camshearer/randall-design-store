@@ -20,6 +20,10 @@ module.exports = {
 
   admin: {
     backendUrl: process.env.MEDUSA_BACKEND_URL,
+    // Disabled: medusa build creates the admin in .medusa/server/ but Railpack's
+    // runtime image doesn't include that directory, so medusa start can't find
+    // index.html. The Admin and Store REST APIs remain fully functional.
+    disable: true,
   },
 
   // Object format required — Medusa v2 calls Object.keys(modules) to validate
