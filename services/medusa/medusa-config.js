@@ -24,22 +24,23 @@ module.exports = {
 
   // Object format required — Medusa v2 calls Object.keys(modules) to validate
   // names. An array would produce index keys "0","1",... which fail validation.
-  // Keys must match Medusa's internal module identifiers (snake_case) so these
-  // override the built-in in-memory implementations rather than running as
-  // additional modules alongside them.
   modules: {
-    event_bus: {
+    eventBus: {
       resolve: '@medusajs/event-bus-redis',
       options: { redisUrl: process.env.REDIS_URL },
     },
-    cache: {
+    cacheService: {
       resolve: '@medusajs/cache-redis',
       options: { redisUrl: process.env.REDIS_URL },
     },
-    // @medusajs/workflow-engine-redis omitted: key "workflowEngine" caused an
-    // Awilix "Could not resolve 'sharedContainer'" crash because it didn't
-    // match the core workflow engine slot. Built-in in-memory engine is used
-    // until the correct Medusa v2.17.x key is confirmed.
+    // Correct Medusa v2 slot key for the workflow engine orchestrator.
+    // "workflowEngine" triggered "Could not resolve 'sharedContainer'" because
+    // that key doesn't match the core slot; "workflowEngineModule" is the
+    // registered name in @medusajs/framework's Modules enum.
+    workflowEngineModule: {
+      resolve: '@medusajs/workflow-engine-redis',
+      options: { redisUrl: process.env.REDIS_URL },
+    },
 
     // ── PAYMENT PROVIDER ──────────────────────────────────────────────────
     // Option A – Stripe (official plugin):
